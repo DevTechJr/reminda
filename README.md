@@ -15,7 +15,7 @@ pip install -r requirements.txt
 ## Running The App
 
 ```bash
-python main.py
+python app.py
 ```
 
 ## Viewing The App
@@ -23,7 +23,9 @@ python main.py
 Go to `http://127.0.0.1:5000`
 
 Log in using:
+
 ### baron@gmail.com
+
 ### hello123
 
 You will be able to view dashboard now
