@@ -46,6 +46,18 @@
     <title>reMindA - Sign Up</title>
   </head>
   <body>
+    <div
+      id="particleContainer"
+      style="
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+        overflow: hidden;
+      "
+    ></div>
     <div class="container">
       <div class="login-card-container">
         <div class="login-card">
@@ -110,5 +122,52 @@
         </div>
       </div>
     </div>
+    <script>
+      // Parallax Effect
+      document.addEventListener("scroll", function () {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const particleContainer = document.getElementById("particleContainer");
+        particleContainer.style.transform = `translateY(${scrollTop * 0.5}px)`;
+      });
+
+      // Particle Animation
+      document.addEventListener("DOMContentLoaded", function () {
+        const particleContainer = document.getElementById("particleContainer");
+
+        for (let i = 0; i < 100; i++) {
+          const particle = document.createElement("div");
+          particle.style.position = "absolute";
+          particle.style.width = `${Math.random() * 5 + 2}px`;
+          particle.style.height = particle.style.width;
+          particle.style.borderRadius = "50%";
+          particle.style.backgroundColor = `rgba(255, 255, 255, ${Math.random()})`;
+          particle.style.top = `${Math.random() * 100}%`;
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.animation = `float ${
+            Math.random() * 5 + 5
+          }s infinite ease-in-out`;
+
+          particleContainer.appendChild(particle);
+        }
+      });
+
+      // Particle float animation
+      const style = document.createElement("style");
+      style.innerHTML = `
+        @keyframes float {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
   </body>
 </html>

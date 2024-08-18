@@ -45,19 +45,21 @@
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
-    <title>{% block title %}Home{% endblock %}</title>
+    <title>{% block title %}Dashboard{% endblock %}</title>
   </head>
   <nav class="bg-[#591D79] p-4">
     <div class="container mx-auto flex justify-between items-center h-7">
       <div class="flex items-center">
         <!-- Logo and Brand Name -->
-        <img
-          src="https://cdn.discordapp.com/attachments/1271225378031013892/1274557021420781630/reMindA.png?ex=66c2af3a&is=66c15dba&hm=ebd187369eb283c9956c9513aacf7cc24f98a69b6e0bca6cd41ff475bad36380&"
-          alt="reMindA Logo"
-          class="h-6 mr-2"
-          style="width: 40px; height: 40px"
-        />
-        <span class="text-white font-semibold text-lg">reMindA</span>
+        <a href="/" class="flex items-center">
+          <img
+            src="https://cdn.discordapp.com/attachments/1271225378031013892/1274557021420781630/reMindA.png?ex=66c2af3a&is=66c15dba&hm=ebd187369eb283c9956c9513aacf7cc24f98a69b6e0bca6cd41ff475bad36380&"
+            alt="reMindA Logo"
+            class="h-6 mr-2"
+            style="width: 55px; height: 55px"
+          />
+          <span class="text-white font-semibold text-lg">reMindA</span>
+        </a>
 
         <!-- Toggle Button for Mobile -->
         <button
@@ -90,7 +92,7 @@
           class="text-white font-bold hover:text-purple-300 transition duration-300"
           id="home"
           href="/"
-          >Home</a
+          >Dashboard</a
         >
         <a
           class="text-white font-bold hover:text-purple-300 transition duration-300"
@@ -123,7 +125,7 @@
           class="text-white hover:text-purple-300 transition duration-300"
           id="home"
           href="/"
-          >Home</a
+          >Dashboard</a
         >
         <a
           class="text-white hover:text-purple-300 transition duration-300"
@@ -195,6 +197,53 @@
           window.location.href = "/";
         });
       }
+    </script>
+    <script>
+      // Parallax Effect
+      document.addEventListener("scroll", function () {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+        const particleContainer = document.getElementById("particleContainer");
+        particleContainer.style.transform = `translateY(${scrollTop * 0.5}px)`;
+      });
+
+      // Particle Animation
+      document.addEventListener("DOMContentLoaded", function () {
+        const particleContainer = document.getElementById("particleContainer");
+
+        for (let i = 0; i < 100; i++) {
+          const particle = document.createElement("div");
+          particle.style.position = "absolute";
+          particle.style.width = `${Math.random() * 5 + 2}px`;
+          particle.style.height = particle.style.width;
+          particle.style.borderRadius = "50%";
+          particle.style.backgroundColor = `rgba(255, 255, 255, ${Math.random()})`;
+          particle.style.top = `${Math.random() * 100}%`;
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.animation = `float ${
+            Math.random() * 5 + 5
+          }s infinite ease-in-out`;
+
+          particleContainer.appendChild(particle);
+        }
+      });
+
+      // Particle float animation
+      const style = document.createElement("style");
+      style.innerHTML = `
+          @keyframes float {
+            0% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-20px);
+            }
+            100% {
+              transform: translateY(0);
+            }
+          }
+        `;
+      document.head.appendChild(style);
     </script>
     {% endblock %}
   </body>
