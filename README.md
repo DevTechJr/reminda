@@ -29,3 +29,5 @@ Log in using:
 You will be able to view dashboard now
 
 Please note: the api is NOT deployed. the `ngrok endpoint` shown in the video has been disabled due to free tier limitations. Only the localhost dashboard version works.
+
+Credit: We used TechWithTim Flask Crash Course to set up our initial api: `https://www.youtube.com/watch?v=dam0GPOAvVI`
