@@ -1,4 +1,4 @@
-# Flask Web App Tutorial
+# Reminda
 
 ## Setup & Installation
 
@@ -21,3 +21,11 @@ python main.py
 ## Viewing The App
 
 Go to `http://127.0.0.1:5000`
+
+Log in using:
+### baron@gmail.com
+### hello123
+
+You will be able to view dashboard now
+
+Please note: the api is NOT deployed. the `ngrok endpoint` shown in the video has been disabled due to free tier limitations. Only the localhost dashboard version works.
