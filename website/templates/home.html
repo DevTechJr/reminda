@@ -1,0 +1,196 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+
+<body
+  style="
+    background: linear-gradient(90deg, #c7c5f4, #776bcc);
+    font-family: Arial, sans-serif;
+  "
+>
+  <!-- Graphs Section -->
+  <div
+    id="graphsContainer"
+    style="
+      display: flex;
+      justify-content: space-around;
+      padding: 50px 3.5%;
+      gap: 5%;
+    "
+  >
+    <!-- Pie Chart Section -->
+    <div
+      style="
+        flex: 1.75;
+        padding: 2%;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <h2 style="margin-bottom: 20px; color: #333; font-size: 1.2rem">
+        Distribution of Sightings
+      </h2>
+      <canvas id="pieChart" style="width: 100%; height: 55vh"></canvas>
+    </div>
+
+    <!-- Time Graph Section -->
+    <div
+      style="
+        flex: 2.5;
+        padding: 2%;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      "
+    >
+      <h2 style="margin-bottom: 20px; color: #333; font-size: 1.2rem">
+        Sightings Over Days
+      </h2>
+      <canvas id="timeGraph" style="width: 100%; height: 60vh"></canvas>
+    </div>
+  </div>
+
+  <!-- Leaflet Maps Pin Section -->
+  <div style="padding: 50px; margin-top: 20px">
+    <div
+      id="map"
+      style="
+        height: 600px;
+        width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      "
+    ></div>
+  </div>
+
+  <!-- Include necessary scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // JavaScript to initialize charts
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch("/getNames")
+        .then((response) => response.json())
+        .then((names) => {
+          const nameCounts = {};
+          names.forEach((name) => {
+            nameCounts[name] = (nameCounts[name] || 0) + 1;
+          });
+          const labels = Object.keys(nameCounts);
+          const data = Object.values(nameCounts);
+
+          const pieCtx = document.getElementById("pieChart").getContext("2d");
+          const pieChart = new Chart(pieCtx, {
+            type: "pie",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "# of Sightings",
+                  data: data,
+                  backgroundColor: [
+                    "#F8A260",
+                    "#E64575",
+                    "#ef7375",
+                    "#6b5b95",
+                    "#88b04b",
+                    "#d65076",
+                  ],
+                },
+              ],
+            },
+          });
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      fetch("/getSightings")
+        .then((response) => response.json())
+        .then((timestamps) => {
+          const sightingsPerDay = { Friday: 0, Saturday: 0, Sunday: 0 };
+          const dayMap = { 5: "Friday", 6: "Saturday", 0: "Sunday" };
+
+          timestamps.forEach((timestamp) => {
+            const date = new Date(timestamp);
+            const day = dayMap[date.getDay()];
+            if (day) sightingsPerDay[day]++;
+          });
+
+          const data = Object.values(sightingsPerDay);
+          const timeCtx = document.getElementById("timeGraph").getContext("2d");
+          const timeGraph = new Chart(timeCtx, {
+            type: "line",
+            data: {
+              labels: ["Friday", "Saturday", "Sunday"],
+              datasets: [
+                {
+                  label: "Sightings",
+                  data: data,
+                  borderColor: "#E64575",
+                  fill: false,
+                },
+              ],
+            },
+          });
+        })
+        .catch((error) => console.error("Error fetching data:", error));
+    });
+  </script>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Initialize the map
+      var map = L.map("map").setView(
+        [43.737359596096454, -79.38942513344792],
+        14
+      );
+
+      // Add OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Fetch coordinates and place markers
+      fetch("/getAll")
+        .then((response) => response.json())
+        .then((sightings) => {
+          sightings.forEach((sighting) => {
+            console.log(sighting);
+            // Split the "lat,lng" string into an array of [lat, lng]
+            const [lat, lng] = sighting.location.split(",").map(Number);
+            console.log(lat, lng);
+            // Extract date and time from sighting.time
+            var [date, time] = sighting.time.split(" ");
+            // Place the marker on the map
+            var marker = L.marker([lat, lng]).addTo(map);
+            marker
+              .bindPopup(
+                `<b>${sighting.name}</b><br>Seen on ${date}<br>at ${time}`
+              )
+              .openPopup();
+            // L.popup()
+            //   .setLatLng([lat, lng])
+            //   .setContent("I am a standalone popup.")
+            //   .openOn(map);
+          });
+        })
+        .catch((error) => console.error("Error fetching coordinates:", error));
+    });
+  </script>
+</body>
+
+{% endblock %}
