@@ -1,5 +1,5 @@
 # Reminda
-### Demo: `https://youtu.be/HwuR4ue74oY?si=0AVUlcujrV2ePnb7`
+### Demo: `[https://youtu.be/HwuR4ue74oY?si=0AVUlcujrV2ePnb7](https://youtu.be/jonY-y7NVz0)`
 
 ## Setup & Installation
 
